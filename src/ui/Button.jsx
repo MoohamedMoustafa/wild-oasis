@@ -57,7 +57,11 @@ const Button = styled.button`
   background-color: var(--color-brand-600);
   color: var(--color-brand-50);
   box-shadow: var(--shadow-sm);
-  margin: 1.4rem;
   cursor: pointer;
+
+  /* & ==> selects the current component */
+  &:hover {
+    background-color: var(--color-brand-700);
+  }
 `;
 export default Button;
