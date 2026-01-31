@@ -19,6 +19,7 @@ export default function App() {
         staleTime: 60 * 1000,
         // this is cashTime in older version
         gcTime: 60 * 1000,
+        refetchOnWindowFocus: false,
       },
     },
   });
