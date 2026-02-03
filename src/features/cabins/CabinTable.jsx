@@ -31,7 +31,6 @@ const TableHeader = styled.header`
 
 export default function CabinTable() {
   const { cabins, isPending } = useCabins();
-  console.log("cabins", cabins);
 
   if (isPending) return <Spinner />;
 
