@@ -1,11 +1,13 @@
 import styled from "styled-components";
-import { formatCurrency } from "../../utils/helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
+
 import Button from "../../ui/Button";
-import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
+import useDeleteCabin from "./useDeleteCabin";
+import { formatCurrency } from "../../utils/helpers";
+
+import { useState } from "react";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import useCreateCabin from "./useCreateCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -48,6 +50,9 @@ const Discount = styled.div`
 
 export default function CabinRow({ cabin }) {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const { mutate: createCabin, isPending: isCreating } = useCreateCabin();
+  const { mutate: deleteCabin, isPending: isDeleting } = useDeleteCabin();
+  const isWorking = isCreating || isDeleting;
 
   const {
     id: cabinId,
@@ -59,20 +64,22 @@ export default function CabinRow({ cabin }) {
     description,
   } = cabin;
 
-  const queryClient = useQueryClient();
+  const handleDeleteCabin = () => {
+    deleteCabin(cabinId);
+  };
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: deleteCabin,
+  const handleDuplicateCabin = () => {
+    const newCabin = {
+      name: `copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description,
+    };
 
-    onSuccess: () => {
-      toast.success("Cabin successfully deleted");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
-    },
-
-    onError: (err) => toast.error(err.message),
-  });
+    createCabin(newCabin);
+  };
 
   const toggleUpdateForm = () => {
     setShowUpdateForm((prev) => !prev);
@@ -92,16 +99,30 @@ export default function CabinRow({ cabin }) {
         )}
 
         <div>
-          <Button variation="secondary" size="small" onClick={toggleUpdateForm}>
-            update
+          <Button
+            variation="secondary"
+            size="small"
+            onClick={toggleUpdateForm}
+            disabled={isWorking}
+          >
+            <HiPencil />
+          </Button>
+
+          <Button
+            variation="secondary"
+            size="small"
+            onClick={handleDuplicateCabin}
+            disabled={isWorking}
+          >
+            <HiSquare2Stack />
           </Button>
           <Button
             variation="danger"
             size="small"
-            onClick={() => mutate(cabinId)}
-            disabled={isPending}
+            onClick={handleDeleteCabin}
+            disabled={isWorking}
           >
-            {isPending ? "deleting..." : "delete"}
+            <HiTrash />
           </Button>
         </div>
       </TableRow>
