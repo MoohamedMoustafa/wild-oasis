@@ -5,7 +5,6 @@ import CreateCabinForm from "./CreateCabinForm";
 import useDeleteCabin from "./useDeleteCabin";
 import { formatCurrency } from "../../utils/helpers";
 
-import { useState } from "react";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import useCreateCabin from "./useCreateCabin";
 import Modal from "../../ui/Modal";
@@ -51,7 +50,6 @@ const Discount = styled.div`
 `;
 
 export default function CabinRow({ cabin }) {
-  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const { mutate: createCabin, isPending: isCreating } = useCreateCabin();
   const { mutate: deleteCabin, isPending: isDeleting } = useDeleteCabin();
   const isWorking = isCreating || isDeleting;
@@ -83,10 +81,6 @@ export default function CabinRow({ cabin }) {
     createCabin(newCabin);
   };
 
-  const toggleUpdateForm = () => {
-    setShowUpdateForm((prev) => !prev);
-  };
-
   return (
     <>
       <TableRow role="row">
@@ -112,12 +106,7 @@ export default function CabinRow({ cabin }) {
 
           <Modal>
             <Modal.Open opens={"edit-form"}>
-              <Button
-                variation="secondary"
-                size="small"
-                onClick={toggleUpdateForm}
-                disabled={isWorking}
-              >
+              <Button variation="secondary" size="small" disabled={isWorking}>
                 <HiPencil />
               </Button>
             </Modal.Open>
@@ -126,12 +115,7 @@ export default function CabinRow({ cabin }) {
             </Modal.Window>
 
             <Modal.Open opens="delete-modal">
-              <Button
-                variation="danger"
-                size="small"
-                onClick={handleDeleteCabin}
-                disabled={isWorking}
-              >
+              <Button variation="danger" size="small" disabled={isWorking}>
                 <HiTrash />
               </Button>
             </Modal.Open>
