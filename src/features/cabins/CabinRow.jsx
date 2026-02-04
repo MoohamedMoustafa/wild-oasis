@@ -8,6 +8,8 @@ import { formatCurrency } from "../../utils/helpers";
 import { useState } from "react";
 import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import useCreateCabin from "./useCreateCabin";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const TableRow = styled.div`
   display: grid;
@@ -102,32 +104,47 @@ export default function CabinRow({ cabin }) {
           <Button
             variation="secondary"
             size="small"
-            onClick={toggleUpdateForm}
-            disabled={isWorking}
-          >
-            <HiPencil />
-          </Button>
-
-          <Button
-            variation="secondary"
-            size="small"
             onClick={handleDuplicateCabin}
             disabled={isWorking}
           >
             <HiSquare2Stack />
           </Button>
-          <Button
-            variation="danger"
-            size="small"
-            onClick={handleDeleteCabin}
-            disabled={isWorking}
-          >
-            <HiTrash />
-          </Button>
+
+          <Modal>
+            <Modal.Open opens={"edit-form"}>
+              <Button
+                variation="secondary"
+                size="small"
+                onClick={toggleUpdateForm}
+                disabled={isWorking}
+              >
+                <HiPencil />
+              </Button>
+            </Modal.Open>
+            <Modal.Window name="edit-form">
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+
+            <Modal.Open opens="delete-modal">
+              <Button
+                variation="danger"
+                size="small"
+                onClick={handleDeleteCabin}
+                disabled={isWorking}
+              >
+                <HiTrash />
+              </Button>
+            </Modal.Open>
+            <Modal.Window name="delete-modal">
+              <ConfirmDelete
+                resourceName={name}
+                onConfirm={handleDeleteCabin}
+                disabled={isWorking}
+              />
+            </Modal.Window>
+          </Modal>
         </div>
       </TableRow>
-
-      {showUpdateForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
