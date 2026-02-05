@@ -10,7 +10,6 @@ import useCreateCabin from "./useCreateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
-import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
@@ -85,32 +84,30 @@ export default function CabinRow({ cabin }) {
         )}
 
         <div>
+          <Button
+            variation="secondary"
+            size="small"
+            onClick={handleDuplicateCabin}
+            disabled={isWorking}
+          >
+            <HiSquare2Stack />
+          </Button>
+
           <Modal>
-            <Menus.Menu>
-              <Menus.Toggle id={cabinId} />
-
-              <Menus.List id={cabinId}>
-                <Menus.Button
-                  icon={<HiSquare2Stack />}
-                  onClick={handleDuplicateCabin}
-                >
-                  duplicate
-                </Menus.Button>
-
-                <Modal.Open opens={"edit-form"}>
-                  <Menus.Button icon={<HiPencil />}>edit</Menus.Button>
-                </Modal.Open>
-
-                <Modal.Open opens="delete-modal">
-                  <Menus.Button icon={<HiTrash />}>delete</Menus.Button>
-                </Modal.Open>
-              </Menus.List>
-            </Menus.Menu>
-
+            <Modal.Open opens={"edit-form"}>
+              <Button variation="secondary" size="small" disabled={isWorking}>
+                <HiPencil />
+              </Button>
+            </Modal.Open>
             <Modal.Window name="edit-form">
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
 
+            <Modal.Open opens="delete-modal">
+              <Button variation="danger" size="small" disabled={isWorking}>
+                <HiTrash />
+              </Button>
+            </Modal.Open>
             <Modal.Window name="delete-modal">
               <ConfirmDelete
                 resourceName={name}
