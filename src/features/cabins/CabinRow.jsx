@@ -98,11 +98,15 @@ export default function CabinRow({ cabin }) {
                 </Menus.Button>
 
                 <Modal.Open opens={"edit-form"}>
-                  <Menus.Button icon={<HiPencil />}>edit</Menus.Button>
+                  <Menus.Button icon={<HiPencil />} disabled={isWorking}>
+                    edit
+                  </Menus.Button>
                 </Modal.Open>
 
                 <Modal.Open opens="delete-modal">
-                  <Menus.Button icon={<HiTrash />}>delete</Menus.Button>
+                  <Menus.Button icon={<HiTrash />} disabled={isWorking}>
+                    delete
+                  </Menus.Button>
                 </Modal.Open>
               </Menus.List>
             </Menus.Menu>
